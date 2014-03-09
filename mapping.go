@@ -23,10 +23,9 @@ func getRdev(dirname string) (map[uint64]string, error) {
 	}
 	for _, fileinfo := range fileinfos {
 		if !fileinfo.IsDir() {
-			switch stat := fileinfo.Sys().(type) {
-			case *syscall.Stat_t:
+			if stat, ok := fileinfo.Sys().(*syscall.Stat_t); ok {
 				ret[stat.Rdev] = fileinfo.Name()
-			default:
+			} else {
 				continue
 			}
 		}
